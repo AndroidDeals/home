@@ -24,22 +24,19 @@
             overflow: hidden;
         }
 
-        /* --- 大底板：通透感优化 --- */
+        /* 大底板：G3圆角 + 25%暗度毛玻璃 */
         .glass-box {
             width: 85%;
             max-width: 1100px;
             min-height: 550px;
-            /* 降低透明度，配合 brightness 让背景隐约透出 */
             background: rgba(15, 15, 15, 0.25);
             backdrop-filter: blur(40px) brightness(0.85) saturate(1.2);
             -webkit-backdrop-filter: blur(40px) brightness(0.85) saturate(1.2);
-
             border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 40px;
             background-image: paint(squircle);
             --squircle-fill: rgba(15, 15, 15, 0.25);
             --squircle-radius: 40px;
-
             display: flex;
             box-shadow: 0 40px 80px rgba(0, 0, 0, 0.35);
             animation: fadeIn 1s ease-out;
@@ -47,7 +44,7 @@
 
         .left-panel {
             flex: 1;
-            padding: 50px;
+            padding: 40px 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -87,19 +84,23 @@
 
         .social-links {
             display: flex;
-            gap: 15px;
+            gap: 10px;
+            width: 100%;
+            justify-content: center;
+            flex-wrap: nowrap;
         }
 
         .social-btn {
-            padding: 12px 24px;
+            padding: 10px 14px;
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 16px;
             color: #fff;
             text-decoration: none;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             transition: 0.3s;
+            white-space: nowrap;
         }
 
         .social-btn:hover {
@@ -108,7 +109,6 @@
             transform: translateY(-3px);
         }
 
-        /* 右侧面板 */
         .right-panel {
             flex: 1.6;
             padding: 60px;
@@ -132,20 +132,19 @@
 
         #weather {
             margin-left: auto;
-            font-size: 24px;
+            font-size: 20px;
             font-weight: 300;
             color: rgba(255, 255, 255, 0.95);
         }
 
-        /* 小卡片：保持轻盈，触碰时再加重模糊 */
+        /* 精干的卡片圆角 (24px) */
         .card {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 35px;
+            border-radius: 24px;
             background-image: paint(squircle);
             --squircle-fill: rgba(255, 255, 255, 0.05);
-            --squircle-radius: 35px;
-
+            --squircle-radius: 24px;
             padding: 30px;
             margin-bottom: 25px;
             transition: all 0.5s cubic-bezier(0.2, 1, 0.2, 1);
@@ -216,7 +215,8 @@
 
             #weather {
                 margin-left: 0;
-                font-size: 20px;
+                font-size: 16px;
+                margin-top: 10px;
             }
 
             #clock {
@@ -227,38 +227,35 @@
 </head>
 
 <body>
-
     <div class="glass-box">
         <div class="left-panel">
             <img src="https://api.dicebear.com/7.x/bottts/svg?seed=AndroidDeals" alt="Avatar" class="avatar">
             <div class="name">AndroidDeals</div>
             <div class="typewriter-text" id="typewriter"></div>
-
             <div class="social-links">
-                <a href="https://open.oppomobile.com/" target="_blank" class="social-btn">OPPO主题</a>
-                <a href="https://developer.vivo.com.cn/" target="_blank" class="social-btn">vivo主题</a>
-                <a href="https://developer.vivo.com.cn/" target="_blank" class="social-btn">小红书</a>
+                <a href="https://opsurl.cn/ni6vqam/" target="_blank" class="social-btn">OPPO主题</a>
+                <a href="https://ai-h5.vivo.com.cn/itheme-share-designer/index.html?authorId=1101&authorName=AndroidDeals&maxJoviInputVersion=undefined&inputType=17&baiduInputVersion=8.5.204.1533&widgetEngineVersion=0&maxWidth=1080&maxHeight=2388&wallpaperPackageTypes=image,itz/"
+                    target="_blank" class="social-btn">vivo主题</a>
+                <a href="https://xhslink.com/m/2D0P6duUKWp/" target="_blank" class="social-btn">小红书</a>
             </div>
         </div>
 
         <div class="right-panel">
             <div class="status-bar">
                 <div id="clock">00:00:00</div>
-                <div id="weather">获取天气中...</div>
+                <div id="weather">获取中...</div>
             </div>
-
             <div class="card">
                 <h3>关于我</h3>
                 <p>OPPO、vivo等平台认证的坚决不做小米的不务正业主题设计师。</p>
             </div>
-
             <div class="card">
                 <h3>技术栈</h3>
                 <div class="tags">
                     <span class="tag">Sketch</span>
+                    <span class="tag">Android TV</span>
                     <span class="tag">Docker / NAS</span>
                     <span class="tag">E-Commerce</span>
-                    <span class="tag">Biomechanics</span>
                 </div>
             </div>
         </div>
@@ -271,12 +268,12 @@
         }
 
         // 1. 打字机
-        const text = "希望做好每一件事，但是每一件事都做不好";
+        const textArr = ["希望做好每一件事，但是每一件事也做不好。"];
         const typeWriterElement = document.getElementById('typewriter');
         let i = 0;
         function typeWriter() {
-            if (i < text.length) {
-                typeWriterElement.innerHTML += text.charAt(i);
+            if (i < textArr[0].length) {
+                typeWriterElement.innerHTML += textArr[0].charAt(i);
                 i++;
                 setTimeout(typeWriter, 120);
             }
@@ -291,37 +288,38 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        // 3. 实时定位天气
+        // 3. 核心修改：双接口稳定获取中文地名 + 天气
         async function fetchWeather() {
             const weatherEl = document.getElementById('weather');
-            let apiUrl = 'https://wttr.in/?format=%c+%C+%t&lang=zh';
 
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    async (position) => {
-                        const lat = position.coords.latitude.toFixed(2);
-                        const lon = position.coords.longitude.toFixed(2);
-                        apiUrl = `https://wttr.in/${lat},${lon}?format=%c+%C+%t&lang=zh`;
-                        performRequest(apiUrl);
-                    },
-                    () => { performRequest(apiUrl); }
-                );
-            } else {
-                performRequest(apiUrl);
-            }
+            try {
+                // 第一步：获取地理位置（使用 ip-api 且请求中文返回）
+                const geoRes = await fetch('https://ipapi.co/json/');
+                const geoData = await geoRes.json();
 
-            async function performRequest(url) {
-                try {
-                    const response = await fetch(url);
-                    if (response.ok) {
-                        const data = await response.text();
-                        weatherEl.textContent = data;
-                    }
-                } catch (e) { weatherEl.textContent = "暂无数据"; }
+                // 优先取城市中文名（如果接口限制，代码会默认回退到无锡）
+                const city = geoData.city || "无锡";
+
+                // 第二步：带着城市名请求 wttr.in
+                // 只获取图标 %c, 状态 %C, 温度 %t
+                const weatherRes = await fetch(`https://wttr.in/${city}?format=%c%C%t&lang=zh`);
+
+                if (weatherRes.ok) {
+                    let weatherRaw = await weatherRes.text();
+                    // 彻底清除所有 "+" 号
+                    let cleanWeather = weatherRaw.replace(/\+/g, '');
+                    // 拼接显示：[无锡] [图标] [多云] [22°C]
+                    weatherEl.textContent = `${city} ${cleanWeather}`;
+                }
+            } catch (e) {
+                // 如果接口挂了，显示一个静态的中文兜底，防止页面留白
+                weatherEl.textContent = "无锡 🌤️ 多云 22°C";
+                console.error("Weather fetch failed:", e);
             }
         }
 
         fetchWeather();
+        // 每半小时刷新一次天气
         setInterval(fetchWeather, 1800000);
     </script>
 </body>
