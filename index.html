@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AndroidDeals | 个人主页</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: url('https://bing.biturl.top/?resolution=1920&format=image&index=0&mkt=zh-CN') no-repeat center center/cover;
+            color: #fff;
+            overflow: hidden;
+        }
+
+        /* --- 大底板：通透感优化 --- */
+        .glass-box {
+            width: 85%;
+            max-width: 1100px;
+            min-height: 550px;
+            /* 降低透明度，配合 brightness 让背景隐约透出 */
+            background: rgba(15, 15, 15, 0.25);
+            backdrop-filter: blur(40px) brightness(0.85) saturate(1.2);
+            -webkit-backdrop-filter: blur(40px) brightness(0.85) saturate(1.2);
+
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 40px;
+            background-image: paint(squircle);
+            --squircle-fill: rgba(15, 15, 15, 0.25);
+            --squircle-radius: 40px;
+
+            display: flex;
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.35);
+            animation: fadeIn 1s ease-out;
+        }
+
+        .left-panel {
+            flex: 1;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .avatar {
+            width: 135px;
+            height: 135px;
+            border-radius: 50%;
+            border: 3px solid rgba(255, 255, 255, 0.25);
+            margin-bottom: 25px;
+            transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .avatar:hover {
+            transform: scale(1.1);
+            border-color: rgba(255, 255, 255, 0.9);
+        }
+
+        .name {
+            font-size: 30px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            letter-spacing: 1px;
+        }
+
+        .typewriter-text {
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.7);
+            min-height: 24px;
+            margin-bottom: 35px;
+            text-align: center;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-btn {
+            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 16px;
+            color: #fff;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .social-btn:hover {
+            background: rgba(255, 255, 255, 1);
+            color: #000;
+            transform: translateY(-3px);
+        }
+
+        /* 右侧面板 */
+        .right-panel {
+            flex: 1.6;
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .status-bar {
+            display: flex;
+            align-items: baseline;
+            margin-bottom: 40px;
+            width: 100%;
+        }
+
+        #clock {
+            font-size: 60px;
+            font-weight: 600;
+            letter-spacing: -1.5px;
+        }
+
+        #weather {
+            margin-left: auto;
+            font-size: 24px;
+            font-weight: 300;
+            color: rgba(255, 255, 255, 0.95);
+        }
+
+        /* 小卡片：保持轻盈，触碰时再加重模糊 */
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 35px;
+            background-image: paint(squircle);
+            --squircle-fill: rgba(255, 255, 255, 0.05);
+            --squircle-radius: 35px;
+
+            padding: 30px;
+            margin-bottom: 25px;
+            transition: all 0.5s cubic-bezier(0.2, 1, 0.2, 1);
+            cursor: pointer;
+            transform-origin: center;
+        }
+
+        .card:hover {
+            --squircle-fill: rgba(255, 255, 255, 0.12);
+            transform: scale(1.05);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+        }
+
+        .card h3 {
+            margin-bottom: 12px;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .card p {
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.75);
+            line-height: 1.8;
+            font-weight: 300;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .tag {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 6px 16px;
+            border-radius: 12px;
+            font-size: 13px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 850px) {
+            .glass-box {
+                flex-direction: column;
+                width: 90%;
+                height: auto;
+                margin: 20px;
+                padding-bottom: 30px;
+            }
+
+            .left-panel {
+                border-right: none;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            #weather {
+                margin-left: 0;
+                font-size: 20px;
+            }
+
+            #clock {
+                font-size: 45px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="glass-box">
+        <div class="left-panel">
+            <img src="https://api.dicebear.com/7.x/bottts/svg?seed=AndroidDeals" alt="Avatar" class="avatar">
+            <div class="name">AndroidDeals</div>
+            <div class="typewriter-text" id="typewriter"></div>
+
+            <div class="social-links">
+                <a href="https://open.oppomobile.com/" target="_blank" class="social-btn">OPPO主题</a>
+                <a href="https://developer.vivo.com.cn/" target="_blank" class="social-btn">vivo主题</a>
+                <a href="https://developer.vivo.com.cn/" target="_blank" class="social-btn">小红书</a>
+            </div>
+        </div>
+
+        <div class="right-panel">
+            <div class="status-bar">
+                <div id="clock">00:00:00</div>
+                <div id="weather">获取天气中...</div>
+            </div>
+
+            <div class="card">
+                <h3>关于我</h3>
+                <p>OPPO、vivo等平台认证的坚决不做小米的不务正业主题设计师。</p>
+            </div>
+
+            <div class="card">
+                <h3>技术栈</h3>
+                <div class="tags">
+                    <span class="tag">Sketch</span>
+                    <span class="tag">Docker / NAS</span>
+                    <span class="tag">E-Commerce</span>
+                    <span class="tag">Biomechanics</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 加载 G3 圆角 Worklet
+        if ('paintWorklet' in CSS) {
+            CSS.paintWorklet.addModule('https://unpkg.com/css-houdini-squircle/squircle.min.js');
+        }
+
+        // 1. 打字机
+        const text = "希望做好每一件事，但是每一件事都做不好";
+        const typeWriterElement = document.getElementById('typewriter');
+        let i = 0;
+        function typeWriter() {
+            if (i < text.length) {
+                typeWriterElement.innerHTML += text.charAt(i);
+                i++;
+                setTimeout(typeWriter, 120);
+            }
+        }
+        window.onload = typeWriter;
+
+        // 2. 时钟
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('clock').textContent = now.toLocaleTimeString('en-GB', { hour12: false });
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // 3. 实时定位天气
+        async function fetchWeather() {
+            const weatherEl = document.getElementById('weather');
+            let apiUrl = 'https://wttr.in/?format=%c+%C+%t&lang=zh';
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    async (position) => {
+                        const lat = position.coords.latitude.toFixed(2);
+                        const lon = position.coords.longitude.toFixed(2);
+                        apiUrl = `https://wttr.in/${lat},${lon}?format=%c+%C+%t&lang=zh`;
+                        performRequest(apiUrl);
+                    },
+                    () => { performRequest(apiUrl); }
+                );
+            } else {
+                performRequest(apiUrl);
+            }
+
+            async function performRequest(url) {
+                try {
+                    const response = await fetch(url);
+                    if (response.ok) {
+                        const data = await response.text();
+                        weatherEl.textContent = data;
+                    }
+                } catch (e) { weatherEl.textContent = "暂无数据"; }
+            }
+        }
+
+        fetchWeather();
+        setInterval(fetchWeather, 1800000);
+    </script>
+</body>
+
+</html>
