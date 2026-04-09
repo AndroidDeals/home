@@ -20,32 +20,32 @@
             align-items: center;
             justify-content: center;
             background: url('https://bing.biturl.top/?resolution=1920&format=image&index=0&mkt=zh-CN') no-repeat center center/cover;
-            background-attachment: fixed; /* 修复移动端背景拉伸问题 */
+            background-attachment: fixed;
             color: #fff;
             padding: 20px;
         }
 
-        /* 大底板：支持移动端自适应高度 */
+        /* --- 大底板：极致通透的毛玻璃 --- */
         .glass-box {
             width: 100%;
             max-width: 1100px;
             min-height: 550px;
-            background: rgba(15, 15, 15, 0.25);
-            backdrop-filter: blur(40px) brightness(0.85) saturate(1.2);
-            -webkit-backdrop-filter: blur(40px) brightness(0.85) saturate(1.2);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(20, 20, 20, 0.35); /* 稍微加深一点底色，让文字更清晰 */
+            backdrop-filter: blur(40px) brightness(0.9) saturate(1.2);
+            -webkit-backdrop-filter: blur(40px) brightness(0.9) saturate(1.2);
             border-radius: 40px;
             background-image: paint(squircle);
-            --squircle-fill: rgba(15, 15, 15, 0.25);
+            --squircle-fill: rgba(20, 20, 20, 0.35);
             --squircle-radius: 40px;
+            
+            /* 使用内阴影模拟高光边缘，比 border 更细腻 */
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
             display: flex;
-            flex-direction: row; /* 默认横向 */
-            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.35);
+            flex-direction: row;
             animation: fadeIn 1s ease-out;
             overflow: hidden;
         }
 
-        /* 左侧面板自适应 */
         .left-panel {
             flex: 1;
             padding: 40px 20px;
@@ -64,18 +64,42 @@
             margin-bottom: 25px;
             transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             background: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
         }
 
-        .avatar:hover { transform: scale(1.1); border-color: rgba(255, 255, 255, 0.9); }
-        .name { font-size: 30px; font-weight: 700; margin-bottom: 12px; letter-spacing: 1px; }
-        .typewriter-text { font-size: 15px; color: rgba(255, 255, 255, 0.7); min-height: 24px; margin-bottom: 35px; text-align: center; line-height: 1.5; }
+        .avatar:hover {
+            transform: scale(1.1);
+            border-color: rgba(255, 255, 255, 0.9);
+        }
 
-        /* 社交按钮自适应 */
-        .social-links { display: flex; gap: 10px; width: 100%; justify-content: center; flex-wrap: wrap; }
+        .name {
+            font-size: 30px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            letter-spacing: 1px;
+        }
+
+        .typewriter-text {
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.7);
+            min-height: 24px;
+            margin-bottom: 35px;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
         .social-btn {
             padding: 10px 14px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
             border-radius: 16px;
             color: #fff;
             text-decoration: none;
@@ -85,101 +109,118 @@
             white-space: nowrap;
         }
 
-        .social-btn:hover { background: rgba(255, 255, 255, 1); color: #000; transform: translateY(-3px); }
+        .social-btn:hover {
+            background: rgba(255, 255, 255, 1);
+            color: #000;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(255, 255, 255, 0.2);
+        }
 
-        /* 右侧面板 */
-        .right-panel { flex: 1.6; padding: 60px; display: flex; flex-direction: column; justify-content: center; }
-        .status-bar { display: flex; align-items: baseline; margin-bottom: 40px; width: 100%; }
-        #clock { font-size: 60px; font-weight: 600; letter-spacing: -1.5px; }
-        #weather { margin-left: auto; font-size: 20px; font-weight: 300; color: rgba(255, 255, 255, 0.95); }
+        .right-panel {
+            flex: 1.6;
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
 
-        /* 小卡片优化 */
+        .status-bar {
+            display: flex;
+            align-items: baseline;
+            margin-bottom: 40px;
+            width: 100%;
+        }
+
+        #clock {
+            font-size: 60px;
+            font-weight: 600;
+            letter-spacing: -1.5px;
+            text-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        #weather {
+            margin-left: auto;
+            font-size: 20px;
+            font-weight: 300;
+            color: rgba(255, 255, 255, 0.95);
+        }
+
+        /* --- 核心优化：完美契合的卡片 --- */
         .card {
             background-color: transparent;
             background-image: paint(squircle);
-            border: none;
-            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08); 
             --squircle-fill: rgba(255, 255, 255, 0.05);
             --squircle-radius: 24px;
-            border-radius: 24px;
+            border-radius: 24px; /* 兜底圆角 */
+            
+            /* 关键：使用 inset box-shadow 代替 border，完美贴合 squircle 边缘不溢出 */
+            border: none;
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+            
             padding: 30px;
             margin-bottom: 25px;
-            transition: all 0.5s cubic-bezier(0.2, 1, 0.2, 1);
+            transition: all 0.4s cubic-bezier(0.2, 1, 0.2, 1);
             cursor: pointer;
-            transform-origin: center;
         }
 
         .card:hover {
-            --squircle-fill: rgba(255, 255, 255, 0.12);
-            transform: scale(1.02); /* 移动端缩放改小，防止溢出屏幕 */
-            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.3), 0 20px 40px rgba(0, 0, 0, 0.25);
+            --squircle-fill: rgba(255, 255, 255, 0.1);
+            transform: scale(1.02);
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2), 0 20px 40px rgba(0, 0, 0, 0.2);
         }
 
-        .card h3 { margin-bottom: 12px; font-size: 20px; font-weight: 600; }
-        .card p { font-size: 15px; color: rgba(255, 255, 255, 0.75); line-height: 1.8; font-weight: 300; }
-        .tags { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
-        .tag { background: rgba(255, 255, 255, 0.1); padding: 6px 16px; border-radius: 12px; font-size: 13px; border: 1px solid rgba(255, 255, 255, 0.05); }
+        .card h3 {
+            margin-bottom: 12px;
+            font-size: 20px;
+            font-weight: 600;
+        }
 
-        /* --- 响应式核心修改：针对移动设备 --- */
+        .card p {
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.75);
+            line-height: 1.8;
+            font-weight: 300;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .tag {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 6px 16px;
+            border-radius: 12px;
+            font-size: 13px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- 移动端适配 --- */
         @media (max-width: 850px) {
-            body {
-                overflow: auto; /* 手机端允许滚动 */
-                align-items: flex-start; /* 顶部对齐 */
-                padding: 15px;
-            }
-
+            body { padding: 15px; align-items: flex-start; overflow: auto; }
             .glass-box {
-                flex-direction: column; /* 纵向堆叠 */
+                flex-direction: column;
                 min-height: auto;
                 border-radius: 30px;
                 --squircle-radius: 30px;
             }
-
-            .left-panel {
-                border-right: none;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-                padding: 40px 15px;
-            }
-
-            .right-panel {
-                padding: 30px 20px;
-            }
-
-            .status-bar {
-                flex-direction: column; /* 时钟天气上下排 */
-                align-items: center;
-                gap: 10px;
-                margin-bottom: 30px;
-            }
-
-            #clock {
-                font-size: 48px;
-            }
-
-            #weather {
-                margin-left: 0;
-                font-size: 16px;
-                background: rgba(255, 255, 255, 0.1);
-                padding: 5px 15px;
-                border-radius: 20px;
-            }
-
-            .card {
-                padding: 20px;
-                margin-bottom: 15px;
-            }
-
-            .name {
-                font-size: 24px;
-            }
-
-            .avatar {
-                width: 100px;
-                height: 100px;
-            }
+            .left-panel { border-right: none; border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding: 40px 15px; }
+            .right-panel { padding: 30px 20px; }
+            .status-bar { flex-direction: column; align-items: center; gap: 10px; margin-bottom: 30px; }
+            #clock { font-size: 48px; }
+            #weather { margin-left: 0; font-size: 16px; background: rgba(255, 255, 255, 0.1); padding: 5px 15px; border-radius: 20px; }
+            .card { padding: 25px; margin-bottom: 15px; }
+            .avatar { width: 100px; height: 100px; margin-bottom: 20px; }
+            .name { font-size: 26px; }
         }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 
@@ -191,7 +232,8 @@
             <div class="typewriter-text" id="typewriter"></div>
             <div class="social-links">
                 <a href="https://opsurl.cn/ni6vqam/" target="_blank" class="social-btn">OPPO主题</a>
-                <a href="https://ai-h5.vivo.com.cn/itheme-share-designer/index.html?authorId=1101&authorName=AndroidDeals" target="_blank" class="social-btn">vivo主题</a>
+                <a href="https://ai-h5.vivo.com.cn/itheme-share-designer/index.html?authorId=1101&authorName=AndroidDeals&maxJoviInputVersion=undefined&inputType=17&baiduInputVersion=8.5.204.1533&widgetEngineVersion=0&maxWidth=1080&maxHeight=2388&wallpaperPackageTypes=image,itz/"
+                    target="_blank" class="social-btn">vivo主题</a>
                 <a href="https://xhslink.com/m/2D0P6duUKWp/" target="_blank" class="social-btn">小红书</a>
             </div>
         </div>
@@ -218,12 +260,10 @@
     </div>
 
     <script>
-        // Houdini Paint API
         if ('paintWorklet' in CSS) {
             CSS.paintWorklet.addModule('https://unpkg.com/css-houdini-squircle/squircle.min.js');
         }
 
-        // 打字机
         const textArr = ["希望做好每一件事，但是每一件事也做不好。"];
         const typeWriterElement = document.getElementById('typewriter');
         let i = 0;
@@ -236,7 +276,6 @@
         }
         window.onload = typeWriter;
 
-        // 时钟
         function updateClock() {
             const now = new Date();
             document.getElementById('clock').textContent = now.toLocaleTimeString('en-GB', { hour12: false });
@@ -244,7 +283,6 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        // 天气与定位
         async function fetchWeather() {
             const weatherEl = document.getElementById('weather');
             try {
