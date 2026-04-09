@@ -24,7 +24,7 @@
             overflow: hidden;
         }
 
-        /* 大底板：G3圆角 + 25%暗度毛玻璃 */
+        /* 大底板：G3圆角 */
         .glass-box {
             width: 85%;
             max-width: 1100px;
@@ -62,34 +62,11 @@
             background: rgba(255, 255, 255, 0.05);
         }
 
-        .avatar:hover {
-            transform: scale(1.1);
-            border-color: rgba(255, 255, 255, 0.9);
-        }
+        .avatar:hover { transform: scale(1.1); border-color: rgba(255, 255, 255, 0.9); }
+        .name { font-size: 30px; font-weight: 700; margin-bottom: 12px; letter-spacing: 1px; }
+        .typewriter-text { font-size: 15px; color: rgba(255, 255, 255, 0.7); min-height: 24px; margin-bottom: 35px; text-align: center; }
 
-        .name {
-            font-size: 30px;
-            font-weight: 700;
-            margin-bottom: 12px;
-            letter-spacing: 1px;
-        }
-
-        .typewriter-text {
-            font-size: 15px;
-            color: rgba(255, 255, 255, 0.7);
-            min-height: 24px;
-            margin-bottom: 35px;
-            text-align: center;
-        }
-
-        .social-links {
-            display: flex;
-            gap: 10px;
-            width: 100%;
-            justify-content: center;
-            flex-wrap: nowrap;
-        }
-
+        .social-links { display: flex; gap: 10px; width: 100%; justify-content: center; flex-wrap: nowrap; }
         .social-btn {
             padding: 10px 14px;
             background: rgba(255, 255, 255, 0.1);
@@ -103,48 +80,28 @@
             white-space: nowrap;
         }
 
-        .social-btn:hover {
-            background: rgba(255, 255, 255, 1);
-            color: #000;
-            transform: translateY(-3px);
-        }
+        .social-btn:hover { background: rgba(255, 255, 255, 1); color: #000; transform: translateY(-3px); }
 
-        .right-panel {
-            flex: 1.6;
-            padding: 60px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
+        .right-panel { flex: 1.6; padding: 60px; display: flex; flex-direction: column; justify-content: center; }
+        .status-bar { display: flex; align-items: baseline; margin-bottom: 40px; width: 100%; }
+        #clock { font-size: 60px; font-weight: 600; letter-spacing: -1.5px; }
+        #weather { margin-left: auto; font-size: 20px; font-weight: 300; color: rgba(255, 255, 255, 0.95); }
 
-        .status-bar {
-            display: flex;
-            align-items: baseline;
-            margin-bottom: 40px;
-            width: 100%;
-        }
-
-        #clock {
-            font-size: 60px;
-            font-weight: 600;
-            letter-spacing: -1.5px;
-        }
-
-        #weather {
-            margin-left: auto;
-            font-size: 20px;
-            font-weight: 300;
-            color: rgba(255, 255, 255, 0.95);
-        }
-
-        /* 精干的卡片圆角 (24px) */
+        /* --- 核心优化部分：解决边框不契合 --- */
         .card {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 24px;
+            /* 1. 移除 background-color，全部交给 squircle 绘制 */
+            background-color: transparent;
             background-image: paint(squircle);
+            
+            /* 2. 移除原生 border，使用 box-shadow inset 模拟 1px 细线 */
+            border: none;
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08); 
+            
+            /* 3. 定义超圆角变量 */
             --squircle-fill: rgba(255, 255, 255, 0.05);
             --squircle-radius: 24px;
+
+            border-radius: 24px; /* 兜底 */
             padding: 30px;
             margin-bottom: 25px;
             transition: all 0.5s cubic-bezier(0.2, 1, 0.2, 1);
@@ -155,73 +112,22 @@
         .card:hover {
             --squircle-fill: rgba(255, 255, 255, 0.12);
             transform: scale(1.05);
-            border-color: rgba(255, 255, 255, 0.3);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+            /* 悬停时通过 shadow 增强边框感和投影 */
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.3), 0 20px 40px rgba(0, 0, 0, 0.25);
         }
 
-        .card h3 {
-            margin-bottom: 12px;
-            font-size: 20px;
-            font-weight: 600;
-        }
+        .card h3 { margin-bottom: 12px; font-size: 20px; font-weight: 600; }
+        .card p { font-size: 15px; color: rgba(255, 255, 255, 0.75); line-height: 1.8; font-weight: 300; }
+        .tags { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+        .tag { background: rgba(255, 255, 255, 0.1); padding: 6px 16px; border-radius: 12px; font-size: 13px; border: 1px solid rgba(255, 255, 255, 0.05); }
 
-        .card p {
-            font-size: 15px;
-            color: rgba(255, 255, 255, 0.75);
-            line-height: 1.8;
-            font-weight: 300;
-        }
-
-        .tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        .tag {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 6px 16px;
-            border-radius: 12px;
-            font-size: 13px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
         @media (max-width: 850px) {
-            .glass-box {
-                flex-direction: column;
-                width: 90%;
-                height: auto;
-                margin: 20px;
-                padding-bottom: 30px;
-            }
-
-            .left-panel {
-                border-right: none;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            }
-
-            #weather {
-                margin-left: 0;
-                font-size: 16px;
-                margin-top: 10px;
-            }
-
-            #clock {
-                font-size: 45px;
-            }
+            .glass-box { flex-direction: column; width: 90%; height: auto; margin: 20px; padding-bottom: 30px; }
+            .left-panel { border-right: none; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+            #weather { margin-left: 0; font-size: 16px; margin-top: 10px; }
+            #clock { font-size: 45px; }
         }
     </style>
 </head>
@@ -229,13 +135,12 @@
 <body>
     <div class="glass-box">
         <div class="left-panel">
-            <img src="my_avatar.jpg" alt="Avatar" class="avatar">
+            <img src="my_avatar.png" alt="Avatar" class="avatar">
             <div class="name">AndroidDeals</div>
             <div class="typewriter-text" id="typewriter"></div>
             <div class="social-links">
                 <a href="https://opsurl.cn/ni6vqam/" target="_blank" class="social-btn">OPPO主题</a>
-                <a href="https://ai-h5.vivo.com.cn/itheme-share-designer/index.html?authorId=1101&authorName=AndroidDeals&maxJoviInputVersion=undefined&inputType=17&baiduInputVersion=8.5.204.1533&widgetEngineVersion=0&maxWidth=1080&maxHeight=2388&wallpaperPackageTypes=image,itz/"
-                    target="_blank" class="social-btn">vivo主题</a>
+                <a href="https://ai-h5.vivo.com.cn/itheme-share-designer/index.html?authorId=1101&authorName=AndroidDeals" target="_blank" class="social-btn">vivo主题</a>
                 <a href="https://xhslink.com/m/2D0P6duUKWp/" target="_blank" class="social-btn">小红书</a>
             </div>
         </div>
@@ -262,12 +167,10 @@
     </div>
 
     <script>
-        // 加载 G3 圆角 Worklet
         if ('paintWorklet' in CSS) {
             CSS.paintWorklet.addModule('https://unpkg.com/css-houdini-squircle/squircle.min.js');
         }
 
-        // 1. 打字机
         const textArr = ["希望做好每一件事，但是每一件事也做不好。"];
         const typeWriterElement = document.getElementById('typewriter');
         let i = 0;
@@ -280,7 +183,6 @@
         }
         window.onload = typeWriter;
 
-        // 2. 时钟
         function updateClock() {
             const now = new Date();
             document.getElementById('clock').textContent = now.toLocaleTimeString('en-GB', { hour12: false });
@@ -288,40 +190,24 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        // 3. 核心修改：双接口稳定获取中文地名 + 天气
         async function fetchWeather() {
             const weatherEl = document.getElementById('weather');
-
             try {
-                // 第一步：获取地理位置（使用 ip-api 且请求中文返回）
                 const geoRes = await fetch('https://ipapi.co/json/');
                 const geoData = await geoRes.json();
-
-                // 优先取城市中文名（如果接口限制，代码会默认回退到无锡）
                 const city = geoData.city || "无锡";
-
-                // 第二步：带着城市名请求 wttr.in
-                // 只获取图标 %c, 状态 %C, 温度 %t
                 const weatherRes = await fetch(`https://wttr.in/${city}?format=%c%C%t&lang=zh`);
-
                 if (weatherRes.ok) {
                     let weatherRaw = await weatherRes.text();
-                    // 彻底清除所有 "+" 号
                     let cleanWeather = weatherRaw.replace(/\+/g, '');
-                    // 拼接显示：[无锡] [图标] [多云] [22°C]
                     weatherEl.textContent = `${city} ${cleanWeather}`;
                 }
             } catch (e) {
-                // 如果接口挂了，显示一个静态的中文兜底，防止页面留白
                 weatherEl.textContent = "无锡 🌤️ 多云 22°C";
-                console.error("Weather fetch failed:", e);
             }
         }
-
         fetchWeather();
-        // 每半小时刷新一次天气
         setInterval(fetchWeather, 1800000);
     </script>
 </body>
-
 </html>
