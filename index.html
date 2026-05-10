@@ -30,14 +30,15 @@
             width: 100%;
             max-width: 1100px;
             min-height: 550px;
-            background: rgba(20, 20, 20, 0.35); /* 稍微加深一点底色，让文字更清晰 */
+            background: rgba(20, 20, 20, 0.35);
+            /* 稍微加深一点底色，让文字更清晰 */
             backdrop-filter: blur(40px) brightness(0.9) saturate(1.2);
             -webkit-backdrop-filter: blur(40px) brightness(0.9) saturate(1.2);
             border-radius: 40px;
             background-image: paint(squircle);
             --squircle-fill: rgba(20, 20, 20, 0.35);
             --squircle-radius: 40px;
-            
+
             /* 使用内阴影模拟高光边缘，比 border 更细腻 */
             box-shadow: 0 40px 80px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
             display: flex;
@@ -151,12 +152,13 @@
             background-image: paint(squircle);
             --squircle-fill: rgba(255, 255, 255, 0.05);
             --squircle-radius: 24px;
-            border-radius: 24px; /* 兜底圆角 */
-            
+            border-radius: 24px;
+            /* 兜底圆角 */
+
             /* 关键：使用 inset box-shadow 代替 border，完美贴合 squircle 边缘不溢出 */
             border: none;
             box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
-            
+
             padding: 30px;
             margin-bottom: 25px;
             transition: all 0.4s cubic-bezier(0.2, 1, 0.2, 1);
@@ -199,27 +201,75 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* --- 移动端适配 --- */
         @media (max-width: 850px) {
-            body { padding: 15px; align-items: flex-start; overflow: auto; }
+            body {
+                padding: 15px;
+                align-items: flex-start;
+                overflow: auto;
+            }
+
             .glass-box {
                 flex-direction: column;
                 min-height: auto;
                 border-radius: 30px;
                 --squircle-radius: 30px;
             }
-            .left-panel { border-right: none; border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding: 40px 15px; }
-            .right-panel { padding: 30px 20px; }
-            .status-bar { flex-direction: column; align-items: center; gap: 10px; margin-bottom: 30px; }
-            #clock { font-size: 48px; }
-            #weather { margin-left: 0; font-size: 16px; background: rgba(255, 255, 255, 0.1); padding: 5px 15px; border-radius: 20px; }
-            .card { padding: 25px; margin-bottom: 15px; }
-            .avatar { width: 100px; height: 100px; margin-bottom: 20px; }
-            .name { font-size: 26px; }
+
+            .left-panel {
+                border-right: none;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+                padding: 40px 15px;
+            }
+
+            .right-panel {
+                padding: 30px 20px;
+            }
+
+            .status-bar {
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+                margin-bottom: 30px;
+            }
+
+            #clock {
+                font-size: 48px;
+            }
+
+            #weather {
+                margin-left: 0;
+                font-size: 16px;
+                background: rgba(255, 255, 255, 0.1);
+                padding: 5px 15px;
+                border-radius: 20px;
+            }
+
+            .card {
+                padding: 25px;
+                margin-bottom: 15px;
+            }
+
+            .avatar {
+                width: 100px;
+                height: 100px;
+                margin-bottom: 20px;
+            }
+
+            .name {
+                font-size: 26px;
+            }
         }
     </style>
 </head>
@@ -231,7 +281,8 @@
             <div class="name">AndroidDeals</div>
             <div class="typewriter-text" id="typewriter"></div>
             <div class="social-links">
-                <a href="https://theme-h5-static.heytap.com/sp/theme/storeStatic/themeDetailShare/themedetail/index.html?masterId=4843079&region=CN&type=0/" target="_blank" class="social-btn">OPPO主题</a>
+                <a href="https://theme-h5-static.heytap.com/sp/theme/storeStatic/themeDetailShare/themedetail/index.html?masterId=4843079&region=CN&type=0/"
+                    target="_blank" class="social-btn">OPPO主题</a>
                 <a href="https://ai-h5.vivo.com.cn/itheme-share-designer/index.html?authorId=1101&authorName=AndroidDeals&maxJoviInputVersion=undefined&inputType=17&baiduInputVersion=8.5.204.1533&widgetEngineVersion=0&maxWidth=1080&maxHeight=2388&wallpaperPackageTypes=image,itz/"
                     target="_blank" class="social-btn">vivo主题</a>
                 <a href="https://xhslink.com/m/2D0P6duUKWp/" target="_blank" class="social-btn">小红书</a>
@@ -283,46 +334,46 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-async function fetchWeather() {
-         const weatherEl = document.getElementById('weather');
-         try {
-             // 1. 获取地理位置
-             const geoRes = await fetch('https://ipapi.co/json/');
-             if (!geoRes.ok) throw new Error('Network response was not ok');
-             const geoData = await geoRes.json();
-             const city = geoData.city || "无锡";
-    
-            // 2. 获取天气（增加 5 秒超时控制）
-            const controller = new AbortController();Ï
-            const timeoutId = setTimeout(() => controller.abort(), 5000);
-            
-            const weatherRes = await fetch(`https://wttr.in/${city}?format=%c%C%t&lang=zh`, { 
-                signal: controller.signal 
-            });
-            clearTimeout(timeoutId);
-   
-            if (weatherRes.ok) {
-                let weatherRaw = await weatherRes.text();
-                
-                // 关键修复：检查是否包含 HTML 标签，如果是则判定为接口错误
-                if (weatherRaw.includes('<html') || weatherRaw.includes('<!DOCTYPE')) {
-                    throw new Error('Invalid data format');
+        async function fetchWeather() {
+            const weatherEl = document.getElementById('weather');
+            try {
+                // 1. 获取地理位置
+                const geoRes = await fetch('https://ipapi.co/json/');
+                if (!geoRes.ok) throw new Error('Network response was not ok');
+                const geoData = await geoRes.json();
+                const city = geoData.city || "无锡";
+
+                // 2. 获取天气（增加 5 秒超时控制）
+                const controller = new AbortController(); Ï
+                const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+                const weatherRes = await fetch(`https://wttr.in/${city}?format=%c%C%t&lang=zh`, {
+                    signal: controller.signal
+                });
+                clearTimeout(timeoutId);
+
+                if (weatherRes.ok) {
+                    let weatherRaw = await weatherRes.text();
+
+                    // 关键修复：检查是否包含 HTML 标签，如果是则判定为接口错误
+                    if (weatherRaw.includes('<html') || weatherRaw.includes('<!DOCTYPE')) {
+                        throw new Error('Invalid data format');
+                    }
+
+                    let cleanWeather = weatherRaw.replace(/\+/g, '').trim();
+                    // 防止返回内容过长
+                    if (cleanWeather.length > 30) cleanWeather = cleanWeather.substring(0, 30) + "...";
+
+                    weatherEl.textContent = `${city} ${cleanWeather}`;
+                } else {
+                    throw new Error('Weather API error');
                 }
-                
-                let cleanWeather = weatherRaw.replace(/\+/g, '').trim();
-                // 防止返回内容过长
-                if (cleanWeather.length > 30) cleanWeather = cleanWeather.substring(0, 30) + "...";
-                
-                weatherEl.textContent = `${city} ${cleanWeather}`;
-            } else {
-                throw new Error('Weather API error');
+            } catch (e) {
+                // 3. 错误兜底：如果接口失败，显示默认天气，不再显示代码
+                console.error("Weather fetch failed:", e);
+                weatherEl.textContent = "无锡 🌤️ 多云 22°C";
             }
-        } catch (e) {
-            // 3. 错误兜底：如果接口失败，显示默认天气，不再显示代码
-            console.error("Weather fetch failed:", e);
-            weatherEl.textContent = "无锡 🌤️ 多云 22°C";
         }
-    }
         fetchWeather();
         setInterval(fetchWeather, 1800000);
     </script>
