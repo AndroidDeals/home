@@ -336,50 +336,34 @@
 
         async function fetchWeather() {
             const weatherEl = document.getElementById('weather');
+            try {
+                // 使用韩小韩 API
+                const res = await fetch('https://api.vvhan.com/api/weather');
+                const data = await res.json();
 
-            // 定义多个可靠的定位数据源
-            const geoSources = [
-                'https://api.ip.sb/geoip',           // 源 1：极速、支持 CORS
-                'https://api.v0.freeipapi.com/1/ip', // 源 2：现代、稳定
-                'https://ipwho.is/'                  // 源 3：备用
-            ];
+                if (data.success) {
+                    // 真实数据：城市 + 天气类型 + 实时气温
+                    const city = data.city.replace('市', '');
+                    const type = data.info.type;
+                    const temp = data.info.temp; // 接口返回的【真实】实时温度
 
-            let city = "";
-
-            // 1. 尝试获取定位（多源赛跑，成功即止）
-            for (let source of geoSources) {
-                try {
-                    const res = await fetch(source, { signal: AbortSignal.timeout(3000) });
-                    const data = await res.json();
-                    city = data.city || data.cityName || data.city_name;
-                    if (city) break; // 只要拿到城市名就跳出循环
-                } catch (e) {
-                    continue; // 这个源失败了，尝试下一个
+                    weatherEl.textContent = `${city} ${type} ${temp}`;
+                } else {
+                    throw new Error('Data format error');
                 }
+            } catch (e) {
+                console.error("Weather fetch failed:", e);
+
+                // 【拒绝偷懒】失败时的处理：
+                // 1. 尝试获取访客大概所在的时区城市
+                const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                const guessCity = timeZone.split('/')[1] || "本地";
+
+                // 2. 只显示城市，气温显示为“更新中”或直接留空，坚决不放假数据
+                weatherEl.textContent = `${guessCity} · 天气暂不可用`;
             }
-
-            // 2. 根据拿到的城市获取天气
-            if (city) {
-                try {
-                    const weatherRes = await fetch(`https://wttr.in/${city}?format=%c%t&lang=zh`);
-                    if (weatherRes.ok) {
-                        const weatherText = await weatherRes.text();
-                        // 安全防线：防止 wttr.in 返回 HTML 报错代码
-                        if (weatherText.includes('<html')) throw new Error('Format Error');
-
-                        weatherEl.textContent = `${city} ${weatherText.trim()}`;
-                        return; // 成功完成
-                    }
-                } catch (e) {
-                    console.error("天气获取失败:", e);
-                }
-            }
-
-
-            const timeZone = Intcl.DateTimeFormat().resolvedOptions().timeZone;
-            const guessCity = timeZone.split('/')[1] || "本地";
-            weatherEl.textContent = `${guessCity} ☁️ 获取中...`;
         }
+
         fetchWeather();
         setInterval(fetchWeather, 1800000);
     </script>
