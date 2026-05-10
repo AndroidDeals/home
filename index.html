@@ -336,33 +336,54 @@
 
         async function fetchWeather() {
             const weatherEl = document.getElementById('weather');
+
+            // 【关键修复 1】确保 DOM 元素存在，否则提前退出并给出明确提示
+            if (!weatherEl) {
+                console.error("⚠️ 未找到 id='weather' 的 HTML 元素，请检查 HTML 或确保脚本在元素后加载！");
+                return;
+            }
+
             try {
-                // 使用韩小韩 API
                 const res = await fetch('https://api.vvhan.com/api/weather');
+
+                if (!res.ok) throw new Error(`HTTP 状态码异常: ${res.status}`);
+
                 const data = await res.json();
 
-                if (data.success) {
-                    // 真实数据：城市 + 天气类型 + 实时气温
-                    const city = data.city.replace('市', '');
-                    const type = data.info.type;
-                    const temp = data.info.temp; // 接口返回的【真实】实时温度
+                // 【关键修复 2】打印真实返回的数据结构，方便你按 F12 对照检查
+                console.log("☁️ 韩小韩 API 返回的数据:", data);
 
-                    weatherEl.textContent = `${city} ${type} ${temp}`;
+                if (data.success) {
+                    const city = (data.city || '未知').replace('市', '');
+
+                    // 【关键修复 3】使用可选链(?.)兼容不同的 API 返回结构
+                    // 如果 data.info 存在就取 data.info，否则尝试去 data.data 里面取
+                    const type = data.info?.type || data.data?.type || data.weather?.day?.type || '未知';
+                    const temp = data.info?.temp || data.data?.high || data.weather?.day?.high || '';
+
+                    weatherEl.textContent = `${city} ${type} ${temp}`.trim();
                 } else {
-                    throw new Error('Data format error');
+                    throw new Error(`接口业务状态失败: ${data.message || '未知原因'}`);
                 }
             } catch (e) {
-                console.error("Weather fetch failed:", e);
+                console.error("❌ Weather fetch failed:", e);
 
-                // 【拒绝偷懒】失败时的处理：
-                // 1. 尝试获取访客大概所在的时区城市
-                const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-                const guessCity = timeZone.split('/')[1] || "本地";
+                // 兜底逻辑（此时我们可以安全地操作 weatherEl，因为前面已经排除了 null）
+                try {
+                    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                    const guessCity = timeZone.split('/')[1] || "本地";
 
-                // 2. 只显示城市，气温显示为“更新中”或直接留空，坚决不放假数据
-                weatherEl.textContent = `${guessCity} · 天气暂不可用`;
+                    // 转换下常见的 Shanghai/Beijing 为中文，提升体验
+                    const cityMap = { 'Shanghai': '上海', 'Beijing': '北京', 'Chongqing': '重庆', 'Urumqi': '乌鲁木齐', 'Taipei': '台北', 'Hong_Kong': '香港', 'Macau': '澳门' };
+                    const displayCity = cityMap[guessCity] || guessCity;
+
+                    weatherEl.textContent = `${displayCity} · 天气暂不可用`;
+                } catch (innerErr) {
+                    weatherEl.textContent = `本地 · 天气暂不可用`;
+                }
             }
         }
+
 
         fetchWeather();
         setInterval(fetchWeather, 1800000);
