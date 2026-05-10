@@ -336,41 +336,49 @@
 
         async function fetchWeather() {
             const weatherEl = document.getElementById('weather');
-            try {
-                // 1. 使用 ipwho.is 获取地理位置（更稳定，支持 HTTPS）
-                const geoRes = await fetch('https://ipwho.is/');
-                const geoData = await geoRes.json();
 
-                // 检查是否成功获取到城市
-                if (!geoData.success) {
-                    throw new Error('定位服务不可用');
+            // 定义多个可靠的定位数据源
+            const geoSources = [
+                'https://api.ip.sb/geoip',           // 源 1：极速、支持 CORS
+                'https://api.v0.freeipapi.com/1/ip', // 源 2：现代、稳定
+                'https://ipwho.is/'                  // 源 3：备用
+            ];
+
+            let city = "";
+
+            // 1. 尝试获取定位（多源赛跑，成功即止）
+            for (let source of geoSources) {
+                try {
+                    const res = await fetch(source, { signal: AbortSignal.timeout(3000) });
+                    const data = await res.json();
+                    city = data.city || data.cityName || data.city_name;
+                    if (city) break; // 只要拿到城市名就跳出循环
+                } catch (e) {
+                    continue; // 这个源失败了，尝试下一个
                 }
-
-                const city = geoData.city; // 自动获取当前城市名，如 "上海"
-                const region = geoData.region; // 省份
-
-                // 2. 根据获取到的城市请求天气
-                // 使用 ?format=3 是 wttr.in 最标准、最简洁的格式，不易产生乱码
-                const weatherRes = await fetch(`https://wttr.in/${city}?format=%c%t&lang=zh`);
-
-                if (weatherRes.ok) {
-                    const weatherText = await weatherRes.text();
-
-                    // 安全过滤：确保返回的不是 HTML 代码
-                    if (weatherText.includes('<html')) {
-                        throw new Error('天气数据格式错误');
-                    }
-
-                    // 组装显示：城市 + 天气
-                    weatherEl.textContent = `${city} ${weatherText.trim()}`;
-                } else {
-                    throw new Error('获取天气失败');
-                }
-            } catch (e) {
-                console.error("定位或天气获取失败:", e);
-                // 如果定位彻底失败，最后才显示这个默认值作为保底
-                weatherEl.textContent = "定位失败 🌤️ 22°C";
             }
+
+            // 2. 根据拿到的城市获取天气
+            if (city) {
+                try {
+                    const weatherRes = await fetch(`https://wttr.in/${city}?format=%c%t&lang=zh`);
+                    if (weatherRes.ok) {
+                        const weatherText = await weatherRes.text();
+                        // 安全防线：防止 wttr.in 返回 HTML 报错代码
+                        if (weatherText.includes('<html')) throw new Error('Format Error');
+
+                        weatherEl.textContent = `${city} ${weatherText.trim()}`;
+                        return; // 成功完成
+                    }
+                } catch (e) {
+                    console.error("天气获取失败:", e);
+                }
+            }
+
+
+            const timeZone = Intcl.DateTimeFormat().resolvedOptions().timeZone;
+            const guessCity = timeZone.split('/')[1] || "本地";
+            weatherEl.textContent = `${guessCity} ☁️ 获取中...`;
         }
         fetchWeather();
         setInterval(fetchWeather, 1800000);
