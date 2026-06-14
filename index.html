@@ -277,7 +277,7 @@
 <body>
     <div class="glass-box">
         <div class="left-panel">
-            <img src="my_avatar.jpg" alt="Avatar" class="avatar">
+            <a href="https://status.androiddeals.top" target="_blank" rel="noopener noreferrer"><img src="my_avatar.jpg" alt="Avatar" class="avatar"></a>
             <div class="name">AndroidDeals</div>
             <div class="typewriter-text" id="typewriter"></div>
             <div class="social-links">
@@ -334,53 +334,86 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        async function fetchWeather() {
-            const weatherEl = document.getElementById('weather');
-
-            // 【关键修复 1】确保 DOM 元素存在，否则提前退出并给出明确提示
-            if (!weatherEl) {
-                console.error("⚠️ 未找到 id='weather' 的 HTML 元素，请检查 HTML 或确保脚本在元素后加载！");
-                return;
-            }
-
+        async function fetchCityFromIP() {
             try {
-                const res = await fetch('https://api.vvhan.com/api/weather');
-
-                if (!res.ok) throw new Error(`HTTP 状态码异常: ${res.status}`);
-
+                const res = await fetch('https://ip-api.com/json/?lang=zh-CN&fields=city', { signal: AbortSignal.timeout(5000) });
                 const data = await res.json();
+                return data.city || '';
+            } catch {
+                return '';
+            }
+        }
 
-                // 【关键修复 2】打印真实返回的数据结构，方便你按 F12 对照检查
-                console.log("☁️ 韩小韩 API 返回的数据:", data);
-
-                if (data.success) {
-                    const city = (data.city || '未知').replace('市', '');
-
-                    // 【关键修复 3】使用可选链(?.)兼容不同的 API 返回结构
-                    // 如果 data.info 存在就取 data.info，否则尝试去 data.data 里面取
-                    const type = data.info?.type || data.data?.type || data.weather?.day?.type || '未知';
-                    const temp = data.info?.temp || data.data?.high || data.weather?.day?.high || '';
-
-                    weatherEl.textContent = `${city} ${type} ${temp}`.trim();
-                } else {
-                    throw new Error(`接口业务状态失败: ${data.message || '未知原因'}`);
+        async function fetchCityFromCoords(lat, lon) {
+            try {
+                const res = await fetch(
+                    `https://geocoding-api.open-meteo.com/v1/reverse?latitude=${lat}&longitude=${lon}&language=zh`,
+                    { signal: AbortSignal.timeout(5000) }
+                );
+                const data = await res.json();
+                if (data.results && data.results[0]) {
+                    return data.results[0].name;
                 }
             } catch (e) {
-                console.error("❌ Weather fetch failed:", e);
+                console.warn('坐标逆地理编码失败');
+            }
+            return '';
+        }
 
-                // 兜底逻辑（此时我们可以安全地操作 weatherEl，因为前面已经排除了 null）
-                try {
-                    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-                    const guessCity = timeZone.split('/')[1] || "本地";
+        function getWeatherDescription(code) {
+            const map = {
+                0: '晴天', 1: '晴', 2: '多云', 3: '阴天',
+                45: '雾', 48: '雾凇',
+                51: '小毛毛雨', 53: '毛毛雨', 55: '大毛毛雨',
+                56: '冻毛毛雨', 57: '冻大毛毛雨',
+                61: '小雨', 63: '中雨', 65: '大雨',
+                66: '冻雨', 67: '冻大雨',
+                71: '小雪', 73: '中雪', 75: '大雪', 77: '雪粒',
+                80: '小阵雨', 81: '中阵雨', 82: '大阵雨',
+                85: '小阵雪', 86: '大阵雪',
+                95: '雷暴', 96: '雷暴加冰雹', 99: '强雷暴加冰雹',
+            };
+            return map[code] || '未知';
+        }
 
-                    // 转换下常见的 Shanghai/Beijing 为中文，提升体验
-                    const cityMap = { 'Shanghai': '上海', 'Beijing': '北京', 'Chongqing': '重庆', 'Urumqi': '乌鲁木齐', 'Taipei': '台北', 'Hong_Kong': '香港', 'Macau': '澳门' };
-                    const displayCity = cityMap[guessCity] || guessCity;
+        async function fetchWeather() {
+            const weatherEl = document.getElementById('weather');
+            if (!weatherEl) return;
 
-                    weatherEl.textContent = `${displayCity} · 天气暂不可用`;
-                } catch (innerErr) {
-                    weatherEl.textContent = `本地 · 天气暂不可用`;
+            weatherEl.textContent = '定位中...';
+
+            try {
+                const pos = await new Promise((resolve, reject) => {
+                    navigator.geolocation.getCurrentPosition(resolve, reject, {
+                        timeout: 10000,
+                        enableHighAccuracy: false,
+                    });
+                });
+
+                const { latitude, longitude } = pos.coords;
+
+                let city = await fetchCityFromCoords(latitude, longitude);
+                if (!city) {
+                    city = await fetchCityFromIP();
                 }
+
+                const weatherRes = await fetch(
+                    `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true&timezone=auto`,
+                    { signal: AbortSignal.timeout(8000) }
+                );
+                const weatherData = await weatherRes.json();
+
+                if (weatherData.current_weather) {
+                    const temp = Math.round(weatherData.current_weather.temperature);
+                    const code = weatherData.current_weather.weathercode;
+                    const description = getWeatherDescription(code);
+                    weatherEl.textContent = `${city} ${description} ${temp}°C`;
+                } else {
+                    throw new Error('No weather data');
+                }
+            } catch (e) {
+                console.error('Weather fetch failed:', e);
+                weatherEl.textContent = '天气暂不可用';
             }
         }
 
