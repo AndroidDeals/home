@@ -281,7 +281,8 @@
             <div class="name">AndroidDeals</div>
             <div class="typewriter-text" id="typewriter"></div>
             <div class="social-links">
-                <a href="https://theme-h5-static.heytap.com/sp/theme/storeStatic/themeDetailShare/themedetail/index.html?masterId=4843079&region=CN&type=0/"
+                <a href="https://dber.androiddeals.top" target="_blank" rel="noopener noreferrer" class="social-btn">DBer</a>
+                <a href="https://theme-h5-static.heytap.com/sp/theme/storeStatic/themeDetailShare/themedetail/index.html?masterId=4843079®ion=CN&type=0/"
                     target="_blank" class="social-btn">OPPO主题</a>
                 <a href="https://ai-h5.vivo.com.cn/itheme-share-designer/index.html?authorId=1101&authorName=AndroidDeals&maxJoviInputVersion=undefined&inputType=17&baiduInputVersion=8.5.204.1533&widgetEngineVersion=0&maxWidth=1080&maxHeight=2388&wallpaperPackageTypes=image,itz/"
                     target="_blank" class="social-btn">vivo主题</a>
@@ -398,7 +399,7 @@
                 }
 
                 const weatherRes = await fetch(
-                    `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true&timezone=auto`,
+                    `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}¤t_weather=true&timezone=auto`,
                     { signal: AbortSignal.timeout(8000) }
                 );
                 const weatherData = await weatherRes.json();
